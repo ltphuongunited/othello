@@ -156,7 +156,7 @@ class Reversi:
                     coord += d
                     if self.is_empty_disc(coord):
                         result += [coord]
-        return result
+        return list(dict.fromkeys(result))
 
     # if coordination is in available fileds
     def is_valid_move(self, coord):
@@ -209,6 +209,7 @@ class Reversi:
     # def print_board(self):
     #     return '\n'.join(''.join(self.board[Coord(i, j)] for j in range(8))
     #                      for i in range(8))
+
 
     def print_board(self):
         print("%7d" % 0, "%3d" % 1, "%3d" % 2, "%3d" % 3, "%3d" % 4, "%3d" % 5, "%3d" % 6, "%3d" %7)

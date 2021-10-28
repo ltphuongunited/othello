@@ -3,31 +3,32 @@ from aihelper import AIHelper
 
 class ReversiAI():
     
-    def __init__(self, heuristic):
+    def __init__(self, player, heuristic):
+        self.MAX_PLAYER = player
         self.heuristic = heuristic
 
     # runs the minimax with precision
     # @staticmethod
     def get_next_move(self, board, player):
         # the depth argument defines how many levels deep we go before using heuristic
-        _, move = self.minimax(board, 3, player, player)
+        _, move = self.alpha_beta(board, 2, player)
         return move
     # @staticmethod
-    def minimax(self, board, depth, player, MAX_PLAYER):
+    def minimax(self, board, depth, player):
         helper = AIHelper()
 
         # if game is over then return something
         if helper.is_game_over(board) or depth == 0:
-            return (self.game_heuristic(board, player), None)
+            return (self.game_heuristic(board), None)
 
         best_move = None
         # if it is a max node
-        if player == MAX_PLAYER:
+        if player == self.MAX_PLAYER:
             best_value = -AIHelper.INFINITY
-            available_moves = helper.available_moves(board, MAX_PLAYER)
+            available_moves = helper.available_moves(board, self.MAX_PLAYER)
             for move in available_moves:
-                node = helper.get_resulting_board(board, MAX_PLAYER, move)
-                value, _ = self.minimax(node, depth - 1, player, -MAX_PLAYER)
+                node = helper.get_resulting_board(board, self.MAX_PLAYER, move)
+                value, _ = self.minimax(node, depth - 1, -self.MAX_PLAYER)
                 if value > best_value:
                     best_value = value
                     best_move = move
@@ -36,10 +37,10 @@ class ReversiAI():
         # if it is a min node
         else:
             best_value = AIHelper.INFINITY
-            available_moves = helper.available_moves(board, MAX_PLAYER)
+            available_moves = helper.available_moves(board, -self.MAX_PLAYER)
             for move in available_moves:
-                node = helper.get_resulting_board(board, MAX_PLAYER, move)
-                value, _ = self.minimax(node, depth - 1, player, -MAX_PLAYER)
+                node = helper.get_resulting_board(board, -self.MAX_PLAYER, move)
+                value, _ = self.minimax(node, depth - 1, self.MAX_PLAYER)
                 if value < best_value:
                     best_value = value
                     best_move = move
@@ -47,22 +48,22 @@ class ReversiAI():
 
 
         
-    def alpha_beta(self, board, depth, player, MAX_PLAYER):
-        return self.alpha_beta_pruning(board, depth, player, MAX_PLAYER, -AIHelper.INFINITY,AIHelper.INFINITY)
+    def alpha_beta(self, board, depth, player):
+        return self.alpha_beta_pruning(board, depth, player, -AIHelper.INFINITY,AIHelper.INFINITY)
 
-    def alpha_beta_pruning(self, board, depth, player, MAX_PLAYER, a, b):
+    def alpha_beta_pruning(self, board, depth, player, a, b):
         helper = AIHelper()
         # if game is over then return something
         if helper.is_game_over(board) or depth == 0:
-            return (self.game_heuristic(board, player), None)
+            return (self.game_heuristic(board), None)
 
         best_move = None
         # if it is a max node
-        if player == MAX_PLAYER:
-            available_moves = helper.available_moves(board, MAX_PLAYER)
+        if player == self.MAX_PLAYER:
+            available_moves = helper.available_moves(board, self.MAX_PLAYER)
             for move in available_moves:
-                node = helper.get_resulting_board(board, MAX_PLAYER, move)
-                value, _ = self.alpha_beta_pruning(node, depth - 1, player, -MAX_PLAYER, a, b)
+                node = helper.get_resulting_board(board, self.MAX_PLAYER, move)
+                value, _ = self.alpha_beta_pruning(node, depth - 1, -self.MAX_PLAYER, a, b)
                 if value > a:
                     a = value
                     best_move = move
@@ -72,10 +73,10 @@ class ReversiAI():
 
         # if it is a min node
         else:
-            available_moves = helper.available_moves(board, MAX_PLAYER)
+            available_moves = helper.available_moves(board, -self.MAX_PLAYER)
             for move in available_moves:
-                node = helper.get_resulting_board(board, MAX_PLAYER, move)
-                value, _ = self.alpha_beta_pruning(node, depth - 1, player, -MAX_PLAYER, a, b)
+                node = helper.get_resulting_board(board, -self.MAX_PLAYER, move)
+                value, _ = self.alpha_beta_pruning(node, depth - 1, self.MAX_PLAYER, a, b)
                 if value < b:
                     b = value
                     best_move = move
@@ -85,10 +86,10 @@ class ReversiAI():
 
 
     # @staticmethod
-    def game_heuristic(self, board, player):
+    def game_heuristic(self, board):
         # defining the ai and Opponent color
-        my_color = player
-        opp_color = -player
+        my_color = self.MAX_PLAYER
+        opp_color = -self.MAX_PLAYER
 
         my_tiles = 0
         opp_tiles = 0
@@ -117,16 +118,16 @@ class ReversiAI():
         #     [-3, -7, -4, 1, 1, -4, -7, -3],
         #     [20, -3, 11, 8, 8, 11, -3, 20]
         # ]
-        V = [
-            [4, -3, 2, 2, 2, 2, -3, 4],
-            [-3, -4, -1, -1, -1, -1, -4, -3],
-            [2, -1, 1, 0, 0, 1, -1, 2],
-            [2, -1, 0, 1, 1, 0, -1, 2],
-            [2, -1, 0, 1, 1, 0, -1, 2],
-            [2, -1, 1, 0, 0, 1, -1, 2],
-            [-3, -4, -1, -1, -1, -1, -4, -3],
-            [4, -3, 2, 2, 2, 2, -3, 4],
-        ]
+        # V = [
+        #     [4, -3, 2, 2, 2, 2, -3, 4],
+        #     [-3, -4, -1, -1, -1, -1, -4, -3],
+        #     [2, -1, 1, 0, 0, 1, -1, 2],
+        #     [2, -1, 0, 1, 1, 0, -1, 2],
+        #     [2, -1, 0, 1, 1, 0, -1, 2],
+        #     [2, -1, 1, 0, 0, 1, -1, 2],
+        #     [-3, -4, -1, -1, -1, -1, -4, -3],
+        #     [4, -3, 2, 2, 2, 2, -3, 4],
+        # ]
 
         # =============================================================================================
         # Piece difference, frontier disks and disk squares
@@ -134,10 +135,10 @@ class ReversiAI():
         for i in range(8):
             for j in range(8):
                 if board[i][j] == my_color:
-                    d += V[i][j]
+                    # d += V[i][j]
                     my_tiles += 1
                 elif board[i][j] == opp_color:
-                    d -= V[i][j]
+                    # d -= V[i][j]
                     opp_tiles += 1
 
                 # calculates the number of blank spaces around me
@@ -318,6 +319,6 @@ class ReversiAI():
         elif self.heuristic == 4:
             return m
         elif self.heuristic == 5:
-            return d
+            return d     
         else:
             return (10 * p) + (801.724 * c) + (382.026 * l) + (78.922 * m) + (74.396 * f) + (10 * d)
