@@ -12,7 +12,7 @@ def attack():
     # 5 - Mobility
     # 6 - Static
     player_black = ReversiAI(1, 1)
-    player_white = ReversiAI(-1, 2) #black player is i
+    player_white = ReversiAI(-1, 5) #black player is i
     game = Reversi()
 
     current_player = 1
@@ -20,51 +20,36 @@ def attack():
     game.print_board()
     start_game = time.time()
     while True:
+        count += 1
+        print("Board ", "%3d" % count)
+
         board = FormatConverter.game_to_ai_board(game.board)
         start = None
         elapse = None
-        count += 1
-        print("Board ", "%3d" % count)
         move = None
-        if current_player == 1:
-            print("BLACK turn", game.player.field)    
+        
+        if game.player.field == 1:
+            print("BLACK turn")   
             start = time.time()
             move = player_black.get_next_move(board, 1)
             elapse = time.time() - start
-            # if move_b is not None:
-            #     game.play(move_b)
-            #     print("The move is : ", move_b, end=" ")
-            #     print(" (in %.2f ms)" % (elapse*1000))
-            # else:
-            #     game.change_current_player()
 
-            # current_player = -1
 
-        elif current_player == -1:
-            print("WHITE turn", game.player.field)    
+        elif game.player.field == -1:
+            print("WHITE turn")   
             start = time.time()
             move = player_white.get_next_move(board, -1)
             elapse = time.time() - start
-            # if move_b is not None:
-            #     game.play(move_b)
-            #     print("The move is : ", move_b, end=" ")
-            #     print(" (in %.2f ms)" % (elapse*1000))
-            # else:
-            #     game.change_current_player()
 
-            # current_player = -1
-
-        if move is not None:
+        if move:
             game.play(move)
             print("The move is : ", move, end=" ")
             print(" (in %.2f ms)" % (elapse*1000))
         else:
+            print("Not move")
             game.change_current_player()
 
-        current_player = -current_player
-
-    
-        if game.game_state!='In progress':
+        if game.game_state != 'In progress':
             game.print_board()
             print(game.black_player.result, ' - ', game.white_player.result)
             print(game.game_state)

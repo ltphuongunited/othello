@@ -163,9 +163,9 @@ class Reversi:
         return coord in self.available_fields()
 
     def play(self, coord):
-        if self.game_state != self.GAME_STATES['IN_PROGRESS']:
-            # raise GameHasEndedError('Game has already ended')
-            return
+        # if self.game_state != self.GAME_STATES['IN_PROGRESS']:
+        #     raise GameHasEndedError('Game has already ended')
+            # return
         if not self.is_valid_move(coord):
             raise InvalidMoveError("Not valid move")
 

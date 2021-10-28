@@ -11,7 +11,7 @@ class ReversiAI():
     # @staticmethod
     def get_next_move(self, board, player):
         # the depth argument defines how many levels deep we go before using heuristic
-        _, move = self.alpha_beta(board, 2, player)
+        _, move = self.alpha_beta(board, 3, player)
         return move
     # @staticmethod
     def minimax(self, board, depth, player):
@@ -45,9 +45,7 @@ class ReversiAI():
                     best_value = value
                     best_move = move
             return (best_value, best_move)
-
-
-        
+    
     def alpha_beta(self, board, depth, player):
         return self.alpha_beta_pruning(board, depth, player, -AIHelper.INFINITY,AIHelper.INFINITY)
 
@@ -96,89 +94,42 @@ class ReversiAI():
         my_front_tiles = 0
         opp_front_tiles = 0
 
-        p = 0
-        c = 0
-        l = 0
-        m = 0
-        f = 0
-        d = 0
+        coin = 0
+        mobility = 0
+        corner = 0
+        stability = 0
 
         # these two are used for going in every 8 directions
         X1 = [-1, -1, 0, 1, 1, 1, 0, -1]
         Y1 = [0, 1, 1, 1, 0, -1, -1, -1]
 
-        # wondering where this came from? check the link in the github ripo from University of Washington
-        # V = [
-        #     [20, -3, 11, 8, 8, 11, -3, 20],
-        #     [-3, -7, -4, 1, 1, -4, -7, -3],
-        #     [11, -4, 2, 2, 2, 2, -4, 11],
-        #     [8, 1, 2, -3, -3, 2, 1, 8],
-        #     [8, 1, 2, -3, -3, 2, 1, 8],
-        #     [11, -4, 2, 2, 2, 2, -4, 11],
-        #     [-3, -7, -4, 1, 1, -4, -7, -3],
-        #     [20, -3, 11, 8, 8, 11, -3, 20]
-        # ]
-        # V = [
-        #     [4, -3, 2, 2, 2, 2, -3, 4],
-        #     [-3, -4, -1, -1, -1, -1, -4, -3],
-        #     [2, -1, 1, 0, 0, 1, -1, 2],
-        #     [2, -1, 0, 1, 1, 0, -1, 2],
-        #     [2, -1, 0, 1, 1, 0, -1, 2],
-        #     [2, -1, 1, 0, 0, 1, -1, 2],
-        #     [-3, -4, -1, -1, -1, -1, -4, -3],
-        #     [4, -3, 2, 2, 2, 2, -3, 4],
-        # ]
-
         # =============================================================================================
-        # Piece difference, frontier disks and disk squares
+        # 1 - Coin Parity
         # =============================================================================================
         for i in range(8):
             for j in range(8):
                 if board[i][j] == my_color:
-                    # d += V[i][j]
                     my_tiles += 1
                 elif board[i][j] == opp_color:
-                    # d -= V[i][j]
                     opp_tiles += 1
+        coin = 100 * (my_tiles - opp_tiles) / (my_tiles + opp_tiles)
 
-                # calculates the number of blank spaces around me
-                # if the tile is not empty take a step in each direction
-                if board[i][j] != 0:
-                    for k in range(8):
-                        x = i + X1[k]
-                        y = j + Y1[k]
-                        if (x >= 0 and x < 8 and y >= 0 and y < 8 and
-                                board[x][y] == 0):
-                            if board[i][j] == my_color:
-                                my_front_tiles += 1
-                            else:
-                                opp_front_tiles += 1
-                            break
+        # 2 - Mobility
+        # ===============================================================================================
+        '''
+        It attempts to capture the relative difference between 
+        the number of possible moves for the max and the min players,
+        with the intent of restricting the
+        opponent’s mobility and increasing one’s own mobility
+        '''
+        # basically it calculates the difference between available moves
+        my_tiles = len(AIHelper().available_moves(board, my_color))
+        opp_tiles = len(AIHelper().available_moves(board, opp_color))
 
-        # =============================================================================================
-        # 1 - Coin Parity
-        # =============================================================================================
-        # if my_tiles > opp_tiles:
-        #     p = (100.0 * my_tiles) / (my_tiles + opp_tiles)
-        # elif my_tiles < opp_tiles:
-        #     p = -(100.0 * opp_tiles) / (my_tiles + opp_tiles)
-        # else:
-        #     p = 0
-        p = 100 * (my_tiles - opp_tiles) / (my_tiles + opp_tiles)
-
-        # =============================================================================================
-        # 2 - Stability - calculates the blank Spaces around my tiles
-        # =============================================================================================
-        # if my_front_tiles > opp_front_tiles:
-        #     f = -(100.0 * my_front_tiles) / (my_front_tiles + opp_front_tiles)
-        # elif my_front_tiles < opp_front_tiles:
-        #     f = (100.0 * opp_front_tiles) / (my_front_tiles + opp_front_tiles)
-        # else:
-        #     f = 0
-        if (my_front_tiles + opp_front_tiles != 0):
-            f = -(100.0 * (my_front_tiles - opp_front_tiles)) / (my_front_tiles + opp_front_tiles)
+        if (my_tiles + opp_tiles != 0): 
+            mobility = (100.0 * (my_tiles - opp_tiles)) / (my_tiles + opp_tiles)
         else:
-            f = 0
+            mobility = 0
 
         # ===============================================================================================
         # 3 - Corner occupancy
@@ -205,13 +156,34 @@ class ReversiAI():
             my_tiles += 1
         elif board[7][7] == opp_color:
             opp_tiles += 1
-        # c = 25 * (my_tiles - opp_tiles)
-        if (my_tiles + opp_tiles != 0):
-            c = 100 * (my_tiles - opp_tiles) / (my_tiles + opp_tiles)
-        else:
-            c = 0
 
-        # ===============================================================================================
+        if (my_tiles + opp_tiles != 0):
+            corner = 100 * (my_tiles - opp_tiles) / (my_tiles + opp_tiles)
+        else:
+            corner = 0
+
+
+        # =============================================================================================
+        # 4.1 - Stability - calculates the blank Spaces around my tiles
+        # =============================================================================================
+        for i in range(8):
+            for j in range(8):
+                if board[i][j] != 0:
+                    for k in range(8):
+                        x = i + X1[k]
+                        y = j + Y1[k]
+                        if (x >= 0 and x < 8 and y >= 0 and y < 8 and board[x][y] == 0):
+                            if board[i][j] == my_color:
+                                my_front_tiles += 1
+                            else:
+                                opp_front_tiles += 1
+                            break
+
+        if (my_front_tiles + opp_front_tiles != 0):
+            stability_1 = -(100.0 * (my_front_tiles - opp_front_tiles)) / (my_front_tiles + opp_front_tiles)
+        else:
+            stability_1 = 0
+
         # 4 - CORNER CLOSENESS
         '''
         If the corner is empty then find out how many of the 
@@ -276,49 +248,25 @@ class ReversiAI():
             elif board[7][6] == opp_color:
                 opp_tiles += 1
 
-        # l = -12.5 * (my_tiles - opp_tiles)
         if (my_tiles + opp_tiles != 0):
-            l = -100 * (my_tiles - opp_tiles) / (my_tiles + opp_tiles)
+            stability_2 = -100 * (my_tiles - opp_tiles) / (my_tiles + opp_tiles)
         else:
-            l = 0
+            stability_2 = 0
 
-        # ===============================================================================================
-        # 5 - Mobility
-        # ===============================================================================================
-        '''
-        It attempts to capture the relative difference between 
-        the number of possible moves for the max and the min players,
-        with the intent of restricting the
-        opponent’s mobility and increasing one’s own mobility
-        '''
-        # basically it calculates the difference between available moves
-        my_tiles = len(AIHelper().available_moves(board, my_color))
-        opp_tiles = len(AIHelper().available_moves(board, opp_color))
-
-        # if my_tiles > opp_tiles:
-        #     m = (100.0 * my_tiles) / (my_tiles + opp_tiles)
-        # elif my_tiles < opp_tiles:
-        #     m = -(100.0 * opp_tiles) / (my_tiles + opp_tiles)
-        # else:
-        #     m = 0
-        if (my_tiles + opp_tiles != 0): 
-            m = (100.0 * (my_tiles - opp_tiles)) / (my_tiles + opp_tiles)
-        else:
-            m = 0
+        stability = stability_1 + stability_2
 
         # =============================================================================================
         # =============================================================================================
         # final weighted score
         # adding different weights to different evaluations
+
         if self.heuristic == 1:
-            return p
+            return coin
         elif self.heuristic == 2:
-            return f + l
+            return mobility
         elif self.heuristic == 3:
-            return c
+            return corner
         elif self.heuristic == 4:
-            return m
-        elif self.heuristic == 5:
-            return d     
+            return stability
         else:
-            return (10 * p) + (801.724 * c) + (382.026 * l) + (78.922 * m) + (74.396 * f) + (10 * d)
+            return (10 * coin) + (30 * corner) + (15 * stability_2) + (30 * mobility) + (15 * stability_1)
