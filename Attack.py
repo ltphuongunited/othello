@@ -11,7 +11,7 @@ def attack():
     # 4 - CORNER CLOSENESS
     # 5 - Mobility
     # 6 - Static
-    player_black = ReversiAI(1, 1)
+    player_black = ReversiAI(1, 4)
     player_white = ReversiAI(-1, 5) #black player is i
     game = Reversi()
 
@@ -49,7 +49,7 @@ def attack():
             print("Not move")
             game.change_current_player()
 
-        if game.game_state != 'In progress':
+        if game.outcome() != 'In progress':
             game.print_board()
             print(game.black_player.result, ' - ', game.white_player.result)
             print(game.game_state)
@@ -62,7 +62,7 @@ def attack():
 
 
 if __name__ == '__main__':
-    attack()
+    # attack()
     # board = [[0  ,-1  ,-1  ,-1  ,-1   ,1   ,0   ,0],
     #         [0   ,0  ,-1  ,-1   ,1   ,1   ,1   ,0],
     #         [0   ,0   ,1  ,-1  ,-1  ,-1   ,1   ,0],
@@ -71,19 +71,20 @@ if __name__ == '__main__':
     #         [1  ,-1   ,1   ,1  , 1  ,1   ,0   ,0],
     #         [-1   ,1   ,1   ,1   ,0   ,1  , 1   ,0],
     #         [-1   ,1   ,1   ,0   ,0   ,0   ,0   ,1]]
-    board = [[0,0,-1,-1,-1,-1,0,0],
-        [0,0,1,-1,-1,-1,1,0],
-        [0,0,1,1,-1,-1,1,0],
-        [1,1,1,-1,-1,1,1,1],
-        [1,1,-1,-1,-1,1,0,0],
-        [1,-1,1,1,1,1,1,0],
-        [-1,1,1,1,0,1,1,0],
-        [-1,1,1,0,0,0,0,1]] 
+    board = [[0,0,1,1,1,1,1,-1],
+    [1,1,1,1,1,1,1,-1],
+    [1,1,1,-1,-1,1,-1,-1],
+    [1,1,1,1,-1,1,1,-1],
+    [1,1,-1,-1,-1,-1,1,-1],
+    [1,-1,-1,-1,-1,-1,-1,-1],
+    [-1,-1,-1,-1,-1,-1,-1,-1],
+    [-1,0,-1,-1,-1,-1,-1,-1]] 
     # player_white = AIHelper()
+    # print(player_white.available_moves(board, 1)[0])
     # for i in player_white.available_moves(board, -1):
     #     print(i, end="")
-    # w = ReversiAI(1, 1)
-    # print(w.get_next_move(board, 1))
+    w = ReversiAI(-1, 1)
+    print(w.get_next_move(board, -1))
 
     # print('\n',player_white.get_resulting_board(board, -1, player_white.available_moves(board, -1)[1]))
 

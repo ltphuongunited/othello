@@ -11,7 +11,7 @@ def attack():
     # 4 - CORNER CLOSENESS
     # 5 - Mobility
     # 6 - Static
-    for i in range(1,5):
+    for i in range(4,5):
         player_black = ReversiAI(1, i)
     
         player_white = ReversiAI(-1, 5)
