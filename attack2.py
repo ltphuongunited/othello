@@ -16,7 +16,7 @@ def attack():
     result_table.field_names = [" ", heuristic[1], heuristic[2], heuristic[3], heuristic[4]]
     # Black player is 1
     # White player is -1
-    for i in range(1,5):
+    for i in range(3,4):
         player_black = ReversiAI(1, i)
         turn = []
         turn.append(heuristic[i])
@@ -62,7 +62,7 @@ def attack():
 
                 if game.game_state!='In progress':
                     turn.append(str(game.black_player.result) + ' - ' + str(game.white_player.result))
-                    # print(i*j)
+                    print(i*j)
                     break
 
         result_table.add_row(turn)

@@ -11,7 +11,7 @@ class ReversiAI():
     # @staticmethod
     def get_next_move(self, board, player):
         # the depth argument defines how many levels deep we go before using heuristic
-        _, move = self.alpha_beta(board, 4, player)
+        _, move = self.alpha_beta(board, 3, player)
         return move
     # @staticmethod
     def minimax(self, board, depth, player):
@@ -29,7 +29,7 @@ class ReversiAI():
             for move in available_moves:
                 node = helper.get_resulting_board(board, self.MAX_PLAYER, move)
                 value, _ = self.minimax(node, depth - 1, -self.MAX_PLAYER)
-                if value >= best_value:
+                if value > best_value:
                     best_value = value
                     best_move = move
             return (best_value, best_move)
@@ -41,7 +41,7 @@ class ReversiAI():
             for move in available_moves:
                 node = helper.get_resulting_board(board, -self.MAX_PLAYER, move)
                 value, _ = self.minimax(node, depth - 1, self.MAX_PLAYER)
-                if value <= best_value:
+                if value < best_value:
                     best_value = value
                     best_move = move
             return (best_value, best_move)
@@ -62,7 +62,7 @@ class ReversiAI():
             for move in available_moves:
                 node = helper.get_resulting_board(board, self.MAX_PLAYER, move)
                 value, _ = self.alpha_beta_pruning(node, depth - 1, -self.MAX_PLAYER, a, b)
-                if value >= a:
+                if value > a:
                     a = value
                     best_move = move
                 if a >= b:
@@ -75,7 +75,7 @@ class ReversiAI():
             for move in available_moves:
                 node = helper.get_resulting_board(board, -self.MAX_PLAYER, move)
                 value, _ = self.alpha_beta_pruning(node, depth - 1, self.MAX_PLAYER, a, b)
-                if value <= b:
+                if value < b:
                     b = value
                     best_move = move
                 if a >= b:
