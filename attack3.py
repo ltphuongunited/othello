@@ -3,65 +3,87 @@ from reversiai import ReversiAI
 from aihelper import AIHelper, FormatConverter
 import time
 from prettytable import PrettyTable
+from prettytable import PrettyTable
 
 def attack():
     # 1 - Coin Parrity
-    # 2 - Stability
+    # 2 - Mobility
     # 3 - Corner occupancy
-    # 4 - CORNER CLOSENESS
-    # 5 - Mobility
-    # 6 - Static
-    for i in range(4,5):
+    # 4 - Stability
+    # 5 - Total
+    start = time.time()
+    heuristic = ("Pass", "Coin Parity", "Mobility", "Corner occupancy", "Stability")
+    result_table = PrettyTable()
+    result_table.field_names = [" ", heuristic[1], heuristic[2], heuristic[3], heuristic[4]]
+
+    player_white = ReversiAI(-1, 5)
+    turn_1 = []
+    turn_1.append("Total is white")
+    for i in range(1,5):
         player_black = ReversiAI(1, i)
-    
-        player_white = ReversiAI(-1, 5)
         game = Reversi()
 
-        current_player = 1
         count = 0
-        # game.print_board()
-        start_game = time.time()
+
         while True:
             count += 1
-            # print("Board ", "%3d" % count)
 
             board = FormatConverter.game_to_ai_board(game.board)
-            start = None
-            elapse = None
             move = None
             
             if game.player.field == 1:
-                # print("BLACK turn")   
-                start = time.time()
                 move = player_black.get_next_move(board, 1)
-                elapse = time.time() - start
 
 
             elif game.player.field == -1:
-                # print("WHITE turn")   
-                start = time.time()
                 move = player_white.get_next_move(board, -1)
-                elapse = time.time() - start
 
             if move:
                 game.play(move)
-                # print("The move is : ", move, end=" ")
-                # print(" (in %.2f ms)" % (elapse*1000))
             else:
-                # print("Not move")
                 game.change_current_player()
 
             if game.game_state != 'In progress':
-                # game.print_board()
-                print(game.black_player.result, ' - ', game.white_player.result)
-                # print(game.game_state)
+                turn_1.append(str(game.black_player.result) + ' - ' + str(game.white_player.result))
+                print(i)
                 break
-            # game.print_board()
-            # print("------------------------------------")
 
-        # print("END GAME in %.2f s" % (time.time() - start_game))
+    
+    turn_2 = []
+    turn_2.append("Total is black")    
+    player_black = ReversiAI(1, 5)
+    for i in range(1,5):
+        player_white = ReversiAI(-1, i)
+        game = Reversi()
+
+        count = 0
+        while True:
+            count += 1
+
+            board = FormatConverter.game_to_ai_board(game.board)
+            move = None
+            
+            if game.player.field == 1:
+                move = player_black.get_next_move(board, 1)
 
 
+            elif game.player.field == -1:
+                move = player_white.get_next_move(board, -1)
+
+            if move:
+                game.play(move)
+            else:
+                game.change_current_player()
+
+            if game.game_state != 'In progress':
+                turn_2.append(str(game.black_player.result) + ' - ' + str(game.white_player.result))
+                print(i)
+                break
+
+    result_table.add_row(turn_1)
+    result_table.add_row(turn_2)
+    print(result_table)
+    print("END in %.2f s" % (time.time() - start))
 
 if __name__ == '__main__':
     attack()

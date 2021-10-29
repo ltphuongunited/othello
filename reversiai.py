@@ -12,11 +12,10 @@ class ReversiAI():
     def get_next_move(self, board, player):
         # the depth argument defines how many levels deep we go before using heuristic
         _, move = self.alpha_beta(board, 3, player)
-        # if move is None:
-        #     _, move = self.alpha_beta(board, 2, player)
         return move
+
     # @staticmethod
-    def minimax(self, board, depth, player, preMove):
+    def minimax(self, board, depth, player):
         helper = AIHelper()
 
         # if game is over then return something
@@ -31,8 +30,7 @@ class ReversiAI():
             available_moves = helper.available_moves(board, self.MAX_PLAYER)
             for move in available_moves:
                 node = helper.get_resulting_board(board, self.MAX_PLAYER, move)
-                value, _ = self.minimax(node, depth - 1, -self.MAX_PLAYER, move)
-                # print(depth, preMove, '-->', move, value)
+                value, _ = self.minimax(node, depth - 1, -self.MAX_PLAYER)
                 if value > best_value:
                     best_value = value
                     best_move = move
@@ -44,8 +42,7 @@ class ReversiAI():
             available_moves = helper.available_moves(board, -self.MAX_PLAYER)
             for move in available_moves:
                 node = helper.get_resulting_board(board, -self.MAX_PLAYER, move)
-                value, _ = self.minimax(node, depth - 1, self.MAX_PLAYER, move)
-                # print(depth, preMove, '-->', move, value)
+                value, _ = self.minimax(node, depth - 1, self.MAX_PLAYER)
                 if value < best_value:
                     best_value = value
                     best_move = move
@@ -274,4 +271,4 @@ class ReversiAI():
         elif self.heuristic == 4:
             return stability
         else:
-            return (10 * coin) + (30 * corner) + (15 * stability_2) + (30 * mobility) + (15 * stability_1)
+            return (7 * coin) + (33 * corner) + (34 * mobility) + 13 * (stability_1 + stability_2)

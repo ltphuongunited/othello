@@ -69,23 +69,31 @@ def print_board(board):
     print("")
 
 if __name__ == '__main__':
-    attack()
+    # attack()
 
-    # board = [[0,0,1,1,1,1,1,-1],
-    #         [1,1,1,1,1,1,1,-1],
-    #         [1,1,1,-1,-1,1,-1,-1],
-    #         [1,1,1,1,-1,1,1,-1],
-    #         [1,1,-1,-1,-1,-1,1,-1],
-    # [1,-1,-1,-1,-1,-1,-1,-1],
-    # [-1,-1,-1,-1,-1,-1,-1,-1],
-    # [-1,0,-1,-1,-1,-1,-1,-1]] 
-    # player_white = AIHelper()
+    board = [[0,0,1,1,1,1,1,-1],
+            [1,1,1,1,1,1,1,-1],
+            [1,1,1,-1,-1,1,-1,-1],
+            [1,1,1,1,-1,1,1,-1],
+            [1,1,-1,-1,-1,-1,1,-1],
+    [1,-1,-1,-1,-1,-1,-1,-1],
+    [-1,-1,-1,-1,-1,-1,-1,-1],
+    [-1,0,-1,-1,-1,-1,-1,-1]] 
+    print_board(board)
+    player = AIHelper()
+    x = Coord(0,1)
+    board = player.get_resulting_board(board, -1, x)
+    print_board(board)
+    x = Coord(0,0)
+    board = player.get_resulting_board(board, 1, x)
+    print_board(board)
+    print(player.available_moves(board,1))
     # print(player_white.available_moves(board, 1)[0])
     # for i in player_white.available_moves(board, -1):
     #     print(i, end="")
     # print_board(board)
     # w = ReversiAI(-1, 1)
-    # print(w.get_next_move(board, -1))
+    # print(type(w.get_next_move(board, -1)))
 
     # print('\n',player_white.get_resulting_board(board, -1, player_white.available_moves(board, -1)[1]))
 
