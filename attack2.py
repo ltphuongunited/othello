@@ -6,21 +6,20 @@ from prettytable import PrettyTable
 
 def attack():
     # 1 - Coin Parrity
-    # 2 - Stability
+    # 2 - Mobility
     # 3 - Corner occupancy
-    # 4 - CORNER CLOSENESS
-    # 5 - Mobility
-    # 6 - Static
-    heuristic = ("Pass", "Coin Parity", "Mobility", "Corner occupancy", "Stability")
+    # 4 - Stability
+    # 5 - Total
+    heuristic = ("Pass", "Coin Parity", "Mobility", "Corner occupancy", "Stability", "Total")
     result_table = PrettyTable()
-    result_table.field_names = [" ", heuristic[1], heuristic[2], heuristic[3], heuristic[4]]
+    result_table.field_names = [" ", heuristic[1], heuristic[2], heuristic[3], heuristic[4], heuristic[5]]
     # Black player is 1
     # White player is -1
-    for i in range(3,4):
+    for i in range(1,6):
         player_black = ReversiAI(1, i)
         turn = []
         turn.append(heuristic[i])
-        for j in range(1,5):
+        for j in range(1,6):
             player_white = ReversiAI(-1, j) #black player is i
             if i == j:
                 turn.append('N/A')
