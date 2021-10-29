@@ -269,6 +269,11 @@ class ReversiAI():
         elif self.heuristic == 3:
             return corner
         elif self.heuristic == 4:
-            return stability
+            return stability + 0.5 * mobility
         else:
-            return (7 * coin) + (33 * corner) + (34 * mobility) + 13 * (stability_1 + stability_2)
+            return (7 * coin) + (33 * corner) + (34 * mobility) + 13 * stability
+
+        #Easy: coin
+        #Medium: stability + 0.5 * mobility
+        #Difficult: (7 * coin) + (33 * corner) + (34 * mobility) + 13 * stability
+        
