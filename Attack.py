@@ -11,7 +11,7 @@ def attack():
     # 4 - Stability
     # 5 - Total
     player_black = ReversiAI(1, 4)
-    player_white = ReversiAI(-1, 5) #black player is i
+    player_white = ReversiAI(-1, 4) #black player is i
     game = Reversi()
 
     current_player = 1
@@ -69,25 +69,25 @@ def print_board(board):
     print("")
 
 if __name__ == '__main__':
-    # attack()
+    attack()
 
-    board = [[0,0,1,1,1,1,1,-1],
-            [1,1,1,1,1,1,1,-1],
-            [1,1,1,-1,-1,1,-1,-1],
-            [1,1,1,1,-1,1,1,-1],
-            [1,1,-1,-1,-1,-1,1,-1],
-    [1,-1,-1,-1,-1,-1,-1,-1],
-    [-1,-1,-1,-1,-1,-1,-1,-1],
-    [-1,0,-1,-1,-1,-1,-1,-1]] 
-    print_board(board)
-    player = AIHelper()
-    x = Coord(0,1)
-    board = player.get_resulting_board(board, -1, x)
-    print_board(board)
-    x = Coord(0,0)
-    board = player.get_resulting_board(board, 1, x)
-    print_board(board)
-    print(player.available_moves(board,1))
+    # board = [[0,0,1,1,1,1,1,-1],
+    #         [1,1,1,1,1,1,1,-1],
+    #         [1,1,1,-1,-1,1,-1,-1],
+    #         [1,1,1,1,-1,1,1,-1],
+    #         [1,1,-1,-1,-1,-1,1,-1],
+    # [1,-1,-1,-1,-1,-1,-1,-1],
+    # [-1,-1,-1,-1,-1,-1,-1,-1],
+    # [-1,0,-1,-1,-1,-1,-1,-1]] 
+    # print_board(board)
+    # player = AIHelper()
+    # x = Coord(0,1)
+    # board = player.get_resulting_board(board, -1, x)
+    # print_board(board)
+    # x = Coord(0,0)
+    # board = player.get_resulting_board(board, 1, x)
+    # print_board(board)
+    # print(player.available_moves(board,1))
     # print(player_white.available_moves(board, 1)[0])
     # for i in player_white.available_moves(board, -1):
     #     print(i, end="")

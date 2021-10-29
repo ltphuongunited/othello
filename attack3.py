@@ -14,12 +14,12 @@ def attack():
     start = time.time()
     heuristic = ("Pass", "Coin Parity", "Mobility", "Corner occupancy", "Stability")
     result_table = PrettyTable()
-    # result_table.field_names = [" ", heuristic[1], heuristic[2], heuristic[3], heuristic[4]]
-    result_table.field_names = [" ", "Medium"]
+    result_table.field_names = [" ", heuristic[1], heuristic[2], heuristic[3], heuristic[4]]
+    # result_table.field_names = [" ", "Medium"]
     player_white = ReversiAI(-1, 5)
     turn_1 = []
     turn_1.append("Total is white")
-    for i in range(4,5):
+    for i in range(1,5):
         player_black = ReversiAI(1, i)
         game = Reversi()
 
@@ -52,7 +52,7 @@ def attack():
     turn_2 = []
     turn_2.append("Total is black")    
     player_black = ReversiAI(1, 5)
-    for i in range(4,5):
+    for i in range(1,5):
         player_white = ReversiAI(-1, i)
         game = Reversi()
 
