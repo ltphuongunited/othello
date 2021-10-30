@@ -182,7 +182,7 @@ class ReversiAI():
                             break
 
         if (my_front_tiles + opp_front_tiles != 0):
-            stability_1 = -(100.0 * (my_front_tiles - opp_front_tiles)) / (my_front_tiles + opp_front_tiles)
+            stability_1 = -(50.0 * (my_front_tiles - opp_front_tiles)) / (my_front_tiles + opp_front_tiles)
         else:
             stability_1 = 0
 
@@ -251,7 +251,7 @@ class ReversiAI():
                 opp_tiles += 1
 
         if (my_tiles + opp_tiles != 0):
-            stability_2 = -100 * (my_tiles - opp_tiles) / (my_tiles + opp_tiles)
+            stability_2 = -50 * (my_tiles - opp_tiles) / (my_tiles + opp_tiles)
         else:
             stability_2 = 0
 
@@ -271,7 +271,7 @@ class ReversiAI():
         elif self.heuristic == 4:
             return stability
         else:
-            return (7 * coin) + (33 * corner) + (34 * mobility) + 13 * stability
+            return (5 * coin) + (35 * corner) + (25 * mobility) + 35 * stability
 
         #Easy: coin
         #Medium: stability + 0.5 * mobility
