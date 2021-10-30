@@ -186,7 +186,7 @@ class ReversiAI():
         else:
             stability_1 = 0
 
-        # 4 - CORNER CLOSENESS
+        # 4.2 - CORNER CLOSENESS
         '''
         If the corner is empty then find out how many of the 
         adjacent block to the corner are AI's or the player's
